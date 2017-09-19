@@ -14,7 +14,7 @@ from targets import write_out_dims_targets, create_dims_targets
 
 class Deconrank(object):
 
-    def __init__(self, in_file, rule_pth=None, polarity=None, out_dir='.'):
+    def __init__(self, in_file, rule_pth=None, polarity=None, out_dir='.', delim=','):
         self.features = None
         self.adduct_groups = None
         self.isotope_groups = None
@@ -24,6 +24,12 @@ class Deconrank(object):
         self.scores = None
         self.polarity = None
         self.scored_list = None
+        self.delim = delim
+        if delim == ',':
+            self.file_ending = 'csv'
+        else:
+            self.file_ending = 'tsv'
+
         self.load_score_rules(in_file, rule_pth, polarity)
         self.suffix = os.path.basename(in_file).split('.')[0]
 
@@ -37,7 +43,7 @@ class Deconrank(object):
         self.scores, self.polarity = read_in_rules(fileIn=in_file, rule_pth=rule_pth, pol=polarity)
 
     def group(self):
-        features, adduct_groups, isotope_groups, header = group_peaks(self.in_file)
+        features, adduct_groups, isotope_groups, header = group_peaks(self.in_file, self.delim)
         grouped_features, grouped_features_nm = combine(features, adduct_groups, isotope_groups)
 
         self.features =  features
@@ -75,7 +81,7 @@ class Deconrank(object):
 
 
     def dims_targets(self, max_time=1800, min_time=120, max_cid_time=300, peak_time_hcd=10, peak_time_cid=12,
-                     delay_time=0.24, cid_perc=10):
+                     delay_time=0.24, cid_perc=10, modify_original=True):
 
         targets, end_time_min, hcd_total_time_min = create_dims_targets(self.d_table, max_time=max_time, min_time=min_time,
                                                                        max_cid_time=max_cid_time, peak_time_hcd=peak_time_hcd,
@@ -84,7 +90,7 @@ class Deconrank(object):
 
         write_out_dims_targets(suffix=self.suffix, out_dir=self.out_dir,
                                end_time_min=end_time_min, hcd_total_time_min=hcd_total_time_min,
-                               targets=targets, pol=self.polarity)
+                               targets=targets, pol=self.polarity, modify_original=True)
 
 
         self.targets = targets
@@ -96,31 +102,42 @@ class Deconrank(object):
         self.delay_time=delay_time
         self.cid_perc=cid_perc
 
-    def write_out_scores(self):
+    def write_out_scores(self, modify_original=False):
         # Need to add adducts etc
-        with open(os.path.join(self.out_dir, self.suffix+'_scores.csv'), 'wb') as csvfile:
-            w = csv.writer(csvfile, delimiter=',')
+        if modify_original:
+            outname = os.path.join(self.out_dir, self.suffix+'_scores.'+self.file_ending)
+        else:
+            outname = os.path.join(self.out_dir, 'scores.' + self.file_ending)
+
+        with open(outname, 'wb') as csvfile:
+            w = csv.writer(csvfile, delimiter=self.delim)
             w.writerow(self.d_table.dtype.names)
-            print(self.d_table.dtype.names)
+            # print(self.d_table.dtype.names)
             for d in self.d_table:
                 w.writerow(d)
 
 
-    def write_out_traceback(self):
+    def write_out_traceback(self, modify_original=False):
         # Need to add adducts etc
-        print(self.header)
-        with open(os.path.join(self.out_dir, self.suffix+'_traceback.csv'), 'wb') as csvfile:
-            w = csv.writer(csvfile, delimiter=',')
+        # print(self.header)
+
+        if modify_original:
+            outname = os.path.join(self.out_dir, self.suffix+'_traceback.'+self.file_ending)
+        else:
+            outname = os.path.join(self.out_dir, 'traceback.' + self.file_ending)
+
+        with open(outname, 'wb') as csvfile:
+            w = csv.writer(csvfile, delimiter=self.delim)
 
             w.writerow(['full_group_idd']+self.header[1:len(self.header)])
             for d in self.d_table:
 
                 if not d['groupid'] == 'NA':
                     gfids = self.grouped_features[int(d['groupid'])]
-                    print(gfids)
+                    # print(gfids)
                     for gfid in gfids:
                         f = self.features[gfid]
-                        print(f)
+                        # print(f)
                         w.writerow([d['groupid']] + f)
 
 
@@ -130,12 +147,12 @@ def main():
     p = argparse.ArgumentParser(prog='PROG',
                                 formatter_class=argparse.RawDescriptionHelpFormatter,
                                 description='''Perform deconvolution and precursor ranking''',
-                                epilog=textwrap.dedent('''\
+                                epilog=textwrap.dedent('''
                             -------------------------------------------------------------------------
 
-                            python deconrank.py -i [in dir] -o [out dir] -p [polarity OPTIONAL] -w [list of weights: adduct,intensity,purity,clustn ]
-
                             Example Usage
+
+                            python deconrank.py -i [in dir] -o [out dir] -p [polarity OPTIONAL] -w [list of weights: adduct,intensity,purity,clustn ]
 
                             python deconrank.py -i /path/2/camera_out.csv -o /path/2/out_dir/ -w 0.3,0.3,0.2,0.2
 
@@ -143,16 +160,18 @@ def main():
 
     p.add_argument('-i', dest='camera_peaklist_pth', help='path to the camera output file', required=True)
     p.add_argument('-o', dest='out_dir', help='out folder', required=True)
-    p.add_argument('-pol', dest='pol', help='polarity [pos, neg], will assign automatically based on'
+    p.add_argument('--pol', dest='pol', help='polarity [pos, neg], will assign automatically based on'
                                             'input file name if not defined', required=False)
-    p.add_argument('-tech', dest='tech', help='Technology used [dims, lcms] default dims', default='dims', required=False)
-    p.add_argument('-rp', dest='rp', help='rule path', required=False)
-    p.add_argument('-w', dest='w', help='Weights for scoring variables (adduct, intensity, purity, clustern)', required=False)
-    p.add_argument('-pthr', dest='pthr', help='Purity threshold', required=False)
-    p.add_argument('-stp', dest='stp', help='Second tier percentage, % of second tier that we go into the target list. '
-                                            'should be in decimal format i.e. 0.1 = 10%. Default is to '
-                                            'remove all second tier peaks (i.e. set to 0.0)', required=False, default=0.0)
-    p.add_argument('-irm', dest='irm', help='Isotopes to remove from fragmentation', required=False, default='[M+1]+,[M+2]+,[M+3]+')
+    p.add_argument('--tech', dest='tech', help='Technology used [dims, lcms] default dims', default='dims', required=False)
+    p.add_argument('--rp', dest='rp', help='rule path', required=False)
+    p.add_argument('--w', dest='w', help='Weights for scoring variables (adduct, intensity, purity, clustern)', required=False)
+    p.add_argument('--pthr', dest='pthr', help='Purity threshold', required=False)
+    p.add_argument('--stp', dest='stp', help=textwrap.dedent('''
+                        Second tier percentage, percent of second tier that go into the target list.
+                        Should be in decimal format i.e. 0.1 = 10 percent. Default is to remove all second tier peaks
+                        (i.e. set to 0.0)
+                        '''), required=False, default=0.0)
+    p.add_argument('--irm', dest='irm', help='Isotopes to remove from fragmentation', required=False, default='[M+1]+,[M+2]+,[M+3]+')
 
     p.add_argument('--max_time', dest='max_time', required=False, default=1800)
     p.add_argument('--min_time', dest='min_time', required=False, default=120)
@@ -161,6 +180,8 @@ def main():
     p.add_argument('--peak_time_cid', dest='peak_time_cid', required=False, default=12)
     p.add_argument('--percentage_cid', dest='percentage_cid', required=False, default=0.3333)
     p.add_argument('--delay_time', dest='delay_time', required=False, default=24)
+    p.add_argument('--delim', dest='delim', required=False, default=',')
+    p.add_argument('--modify_name', dest='modify_name', action='store_true')
 
     st = datetime.datetime.now()
     print("###start time:", st.strftime("%A%d%B%Y_%I%M"), "###")
@@ -187,17 +208,29 @@ def main():
     else:
         pthr = 0
 
+    if args.delim=='comma':
+        delim = ','
+    elif args.delim=='tab':
+        delim = '\t'
+    else:
+        print("delim needs to be either 'comma' or 'tab'")
+
     stp = np.float(args.stp)
-    dr = Deconrank(in_file=args.camera_peaklist_pth, out_dir =args.out_dir, polarity=polarity, rule_pth=args.rp )
+    dr = Deconrank(in_file=args.camera_peaklist_pth, out_dir =args.out_dir, polarity=polarity, rule_pth=args.rp,
+                   delim=delim)
     dr.group()
     dr.score(weights=weights)
     dr.filter(irm=irm, stp=stp, pthr=pthr)
-    dr.write_out_scores()
-    dr.write_out_traceback()
+    dr.write_out_scores(args.modify_name)
+    dr.write_out_traceback(args.modify_name)
     if args.tech=='dims':
-        dr.dims_targets(max_time=args.max_time, min_time=args.min_time, max_cid_time=args.max_cid_time,
-                        peak_time_hcd=args.peak_time_hcd, peak_time_cid=args.peak_time_cid,
-                     delay_time=args.delay_time, cid_perc=args.percentage_cid)
+        dr.dims_targets(max_time=float(args.max_time),
+                        min_time=float(args.min_time),
+                        max_cid_time=float(args.max_cid_time),
+                        peak_time_hcd=float(args.peak_time_hcd),
+                        peak_time_cid=float(args.peak_time_cid),
+                        delay_time=float(args.delay_time),
+                        cid_perc=float(args.percentage_cid))
     elif args.tech=='lcms':
         dr.lcms_targets()
     else:

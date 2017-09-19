@@ -112,11 +112,11 @@ def initial_filter(d_table, grouped_feature_d, stier_perc=0.5, pthr=None, irm=No
     d_table['excludedFinal'] = d_table['excluded']
 
 
-    with open('test_scores.csv', 'wb') as csvfile:
-        w = csv.writer(csvfile, delimiter=',')
-        w.writerow(d_table.dtype.names)
-        print(d_table.dtype.names)
-        for d in d_table:
-            w.writerow(d)
+    # with open('test_scores.csv', 'wb') as csvfile:
+    #     w = csv.writer(csvfile, delimiter=',')
+    #     w.writerow(d_table.dtype.names)
+    #     # print(d_table.dtype.names)
+    #     for d in d_table:
+    #         w.writerow(d)
 
     return d_table

@@ -4,7 +4,7 @@ from __future__ import (
 import csv
 import collections
 
-def group_peaks(fn):
+def group_peaks(fn, delim):
     """
     Information regarding the pcgroup is contained within a hybrid dict key for the adduct data
     Information regarding isotope groups is inherently constrained to given pcgroups by numerical tag for M+ and M+1.
@@ -14,13 +14,14 @@ def group_peaks(fn):
     with open(fn, 'rb') as csvfile:
 
         # read in the CAMERA-annotate object for deconvolution (.csv format).
-        reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        reader = csv.reader(csvfile, delimiter=delim, quotechar='"')
 
         # Get header from the input file: the first row in the file.
         header = next(reader, None)
 
         # Record column number for column headed as 'isotopes'
         cln_iso = header.index('isotopes')
+        cln_peakid = header.index('peakID')
 
         # ignore everything after rsd column (generated from the R workflow script not XCMS/CAMERA)
         # cln_msms_count = header.index('msms_count')
@@ -39,14 +40,12 @@ def group_peaks(fn):
 
         # Loop through the iterator
         for row in reader:
-
-
             # Added by T. N. Lawson - ignores the additional information in final columns for picking of features etc.
             # row = row[:cln_msms_count + 1]
 
             # Row index number as key (peakID), values comprise all remaining columns
             # Features[str(row[0])] = row[1:]
-            Features[row[0]] = row[1:]
+            Features[row[cln_peakid]] = row[1:]
 
             # Check to see if the 'pcgroup' is already in the groups dictionary.
             if row[cln_iso + 2] not in groups:
@@ -122,8 +121,8 @@ def combine(features, AdductGroups, IsotopeGroups):
     print("###refining###")
 
     #List initialisation
-    rts = []
-    rts_unfil = []
+    # rts = []
+    # rts_unfil = []
 
     #Initialise the dictionary 'grouped_features'
     grouped_features = collections.OrderedDict()
@@ -141,7 +140,7 @@ def combine(features, AdductGroups, IsotopeGroups):
     for peakID in features:
 
         #Append the fourth value in the dict[key] values object
-        rts_unfil.append(float(features[peakID][3]))
+        # rts_unfil.append(float(features[peakID][3]))
 
         #If the peakID has not already been excluded due to prior grouping
         if str(peakID) not in excluded:

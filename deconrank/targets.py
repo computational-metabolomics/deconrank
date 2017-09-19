@@ -90,19 +90,26 @@ def create_dims_targets(d_table, max_time=1800, min_time=120, max_cid_time=300, 
 
 
 
-def write_out_dims_targets(suffix, out_dir, end_time_min, hcd_total_time_min, targets, pol):
+def write_out_dims_targets(suffix, out_dir, end_time_min, hcd_total_time_min, targets, pol,
+                           modify_original, dir=None):
     #==============================================
     # Write out
     #==============================================
-    nm_target = suffix + "_target.txt"
+    if modify_original:
+        nm_target = suffix + "_target.tsv"
+    else:
+        nm_target = 'target.tsv'
 
     # saveand target list
-    tdir = os.path.join(out_dir, "targets")
-    if not os.path.exists(tdir):
-        os.makedirs(tdir)
-    nt_target = os.path.join(tdir, nm_target)
+    if dir:
+        tdir = os.path.join(out_dir, dir)
+        if not os.path.exists(tdir):
+            os.makedirs(tdir)
+        nt_target = os.path.join(tdir, nm_target)
+    else:
+        nt_target = nm_target
 
-    xcalibur_auto_pth = os.path.join(out_dir, "XcaliburAutoInput.txt")
+    xcalibur_auto_pth = os.path.join(out_dir, "XcaliburAutoInput.tsv")
 
     # Get file pats and methods for XcaliburAutoInput file
     if pol=="POS":

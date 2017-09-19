@@ -23,6 +23,7 @@ def read_in_rules(fileIn, ruledir=None, pol=None, rule_pth=None):
             print("positive)###")
             # rules_pth = os.path.join(rule_pth, "CAMERA_rules_pos.csv")
             rule_pth = os.path.join(rule_dir, "CAMERA_rules_PosFinal_PlusLi.csv")
+            print(rule_pth)
 
         elif re.match(".*neg.*", fileIn, re.IGNORECASE) or pol == "neg":
             print("negative)###")
