@@ -231,7 +231,7 @@ def main():
                         peak_time_cid=float(args.peak_time_cid),
                         delay_time=float(args.delay_time),
                         cid_perc=float(args.percentage_cid))
-    
+
     ft = datetime.datetime.now()
     d = ft - st
     print("###end time:", ft.strftime("%A, %d. %B %Y %I:%M%p"), "###")
