@@ -231,12 +231,7 @@ def main():
                         peak_time_cid=float(args.peak_time_cid),
                         delay_time=float(args.delay_time),
                         cid_perc=float(args.percentage_cid))
-    elif args.tech=='lcms':
-        dr.lcms_targets()
-    else:
-        print('ERROR: Please choose technology, must be either "dims" or "lcms"')
-        quit()
-
+    
     ft = datetime.datetime.now()
     d = ft - st
     print("###end time:", ft.strftime("%A, %d. %B %Y %I:%M%p"), "###")
