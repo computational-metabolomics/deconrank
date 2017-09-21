@@ -81,7 +81,7 @@ class Deconrank(object):
 
 
     def dims_targets(self, max_time=1800, min_time=120, max_cid_time=300, peak_time_hcd=10, peak_time_cid=12,
-                     delay_time=0.24, cid_perc=10, modify_original=True):
+                     delay_time=0.24, cid_perc=10, modify_original=False):
 
         targets, end_time_min, hcd_total_time_min = create_dims_targets(self.d_table, max_time=max_time, min_time=min_time,
                                                                        max_cid_time=max_cid_time, peak_time_hcd=peak_time_hcd,
@@ -90,7 +90,7 @@ class Deconrank(object):
 
         write_out_dims_targets(suffix=self.suffix, out_dir=self.out_dir,
                                end_time_min=end_time_min, hcd_total_time_min=hcd_total_time_min,
-                               targets=targets, pol=self.polarity, modify_original=True)
+                               targets=targets, pol=self.polarity, modify_original=modify_original)
 
 
         self.targets = targets
@@ -230,7 +230,8 @@ def main():
                         peak_time_hcd=float(args.peak_time_hcd),
                         peak_time_cid=float(args.peak_time_cid),
                         delay_time=float(args.delay_time),
-                        cid_perc=float(args.percentage_cid))
+                        cid_perc=float(args.percentage_cid),
+                        modify_original=args.modify_name)
 
     ft = datetime.datetime.now()
     d = ft - st
