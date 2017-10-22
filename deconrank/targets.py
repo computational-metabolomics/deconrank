@@ -90,13 +90,13 @@ def create_dims_targets(d_table, max_time=1800, min_time=120, max_cid_time=300, 
 
 
 
-def write_out_dims_targets(suffix, out_dir, end_time_min, hcd_total_time_min, targets, pol,
-                           modify_original, dir=None):
+def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, pol,
+                           target_name=None, dir=None, meth_template_name=None):
     #==============================================
     # Write out
     #==============================================
-    if modify_original:
-        nm_target = suffix + "_target.tsv"
+    if target_name:
+        nm_target = target_name + "_target.tsv"
     else:
         nm_target = 'target.tsv'
 
@@ -112,13 +112,21 @@ def write_out_dims_targets(suffix, out_dir, end_time_min, hcd_total_time_min, ta
     xcalibur_auto_pth = os.path.join(out_dir, "XcaliburAutoInput.tsv")
 
     # Get file pats and methods for XcaliburAutoInput file
-    if pol=="POS":
-        meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\DMA_Pos_MS_MSMS_MSn_Final_v3.meth"
+    if not meth_template_name:
+        if pol == "POS":
+            meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\Pos_MSMS_MSn.meth"
+        else:
+            meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\Neg_MSMS_MSn.meth"
     else:
-        meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\DMA_nESI_Neg_Polar_FINAL_MSMS_MSn_3e6_TEMPLATE.meth"
+        meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\\"+meth_template_name
+
+    if target_name:
+        method_ex = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\methods\\" + target_name + "_MSn.meth"
+    else:
+        method_ex = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\methods\\MSn.meth"
 
     target_ex = "C:\\Documents and Settings\\XPMUser\Desktop\\XcaliburAuto\\targets\\"+nm_target
-    method_ex = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\methods\\"+suffix+"n.meth"
+
 
     # xcalibur auto input string
     xcalibur_auto_txt = [meth_template, target_ex, end_time_min, hcd_total_time_min, method_ex]

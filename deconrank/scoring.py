@@ -220,7 +220,7 @@ def create_score_table(scored_adduct_list, features, header):
 
         l.append(tuple(
             [peakID, mz, intensity, isotope, adduct, groupid, bestAdductScore, clustn, medianPurity] + [0] * 11))
-
+    print(l)
     d_table =  load_score_table(l)
 
     return d_table

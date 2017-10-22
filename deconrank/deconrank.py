@@ -81,7 +81,7 @@ class Deconrank(object):
 
 
     def dims_targets(self, max_time=1800, min_time=120, max_cid_time=300, peak_time_hcd=10, peak_time_cid=12,
-                     delay_time=0.24, cid_perc=10, modify_original=False):
+                     delay_time=0.24, cid_perc=10, galaxy_name=None):
 
         targets, end_time_min, hcd_total_time_min = create_dims_targets(self.d_table, max_time=max_time, min_time=min_time,
                                                                        max_cid_time=max_cid_time, peak_time_hcd=peak_time_hcd,
@@ -90,8 +90,8 @@ class Deconrank(object):
 
         write_out_dims_targets(suffix=self.suffix, out_dir=self.out_dir,
                                end_time_min=end_time_min, hcd_total_time_min=hcd_total_time_min,
-                               targets=targets, pol=self.polarity, modify_original=modify_original)
-
+                               targets=targets, pol=self.polarity, modify_original=galaxy_name,
+                               method_template_name=method_template_name)
 
         self.targets = targets
         self.max_time = max_time
@@ -102,8 +102,7 @@ class Deconrank(object):
         self.delay_time=delay_time
         self.cid_perc=cid_perc
 
-    def write_out_scores(self, modify_original=False):
-        # Need to add adducts etc
+    def write_out_scores(self, modify_original=False, full=False):
         if modify_original:
             outname = os.path.join(self.out_dir, self.suffix+'_scores.'+self.file_ending)
         else:
@@ -111,10 +110,19 @@ class Deconrank(object):
 
         with open(outname, 'wb') as csvfile:
             w = csv.writer(csvfile, delimiter=self.delim)
-            w.writerow(self.d_table.dtype.names)
-            # print(self.d_table.dtype.names)
+            d_table_names = list(self.d_table.dtype.names)
+            if full:
+                colnames = [d_table_names[0]] + self.header[1:len(self.header)] + d_table_names[6:len(d_table_names)]
+            else:
+                colnames = d_table_names
+            w.writerow(colnames)
+
             for d in self.d_table:
-                w.writerow(d)
+                if full:
+                    d = list(d)
+                    w.writerow([d[0]]+self.features[d[0]]+d[6:len(d)])
+                else:
+                    w.writerow(d)
 
 
     def write_out_traceback(self, modify_original=False):
@@ -180,8 +188,11 @@ def main():
     p.add_argument('--peak_time_cid', dest='peak_time_cid', required=False, default=12)
     p.add_argument('--percentage_cid', dest='percentage_cid', required=False, default=0.3333)
     p.add_argument('--delay_time', dest='delay_time', required=False, default=24)
-    p.add_argument('--delim', dest='delim', required=False, default=',')
+    p.add_argument('--delim', dest='delim', required=False, default='comma')
     p.add_argument('--modify_name', dest='modify_name', action='store_true')
+    p.add_argument('--target_name', dest='target_name', required=False)
+    p.add_argument('--method_template_name', dest='method_template_name', required=False)
+    p.add_argument('--full_output', dest='full_output', action='store_true')
 
     st = datetime.datetime.now()
     print("###start time:", st.strftime("%A%d%B%Y_%I%M"), "###")
@@ -221,7 +232,7 @@ def main():
     dr.group()
     dr.score(weights=weights)
     dr.filter(irm=irm, stp=stp, pthr=pthr)
-    dr.write_out_scores(args.modify_name)
+    dr.write_out_scores(args.modify_name, full=args.full_output)
     dr.write_out_traceback(args.modify_name)
     if args.tech=='dims':
         dr.dims_targets(max_time=float(args.max_time),
@@ -231,7 +242,8 @@ def main():
                         peak_time_cid=float(args.peak_time_cid),
                         delay_time=float(args.delay_time),
                         cid_perc=float(args.percentage_cid),
-                        modify_original=args.modify_name)
+                        target_name=args.target_name,
+                        method_template_name=args.method_template_name)
 
     ft = datetime.datetime.now()
     d = ft - st
