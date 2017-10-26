@@ -91,7 +91,7 @@ def create_dims_targets(d_table, max_time=1800, min_time=120, max_cid_time=300, 
 
 
 def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, pol,
-                           target_name=None, dir=None, meth_template_name=None):
+                           target_name=None, dir=None, method_template_name=None):
     #==============================================
     # Write out
     #==============================================
@@ -112,13 +112,13 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
     xcalibur_auto_pth = os.path.join(out_dir, "XcaliburAutoInput.tsv")
 
     # Get file pats and methods for XcaliburAutoInput file
-    if not meth_template_name:
+    if not method_template_name:
         if pol == "POS":
             meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\Pos_MSMS_MSn.meth"
         else:
             meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\Neg_MSMS_MSn.meth"
     else:
-        meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\\"+meth_template_name
+        meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\\"+method_template_name
 
     if target_name:
         method_ex = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\methods\\" + target_name + "_MSn.meth"

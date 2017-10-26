@@ -81,16 +81,16 @@ class Deconrank(object):
 
 
     def dims_targets(self, max_time=1800, min_time=120, max_cid_time=300, peak_time_hcd=10, peak_time_cid=12,
-                     delay_time=0.24, cid_perc=10, galaxy_name=None):
+                     delay_time=0.24, cid_perc=10, target_name=None, method_template_name=None):
 
         targets, end_time_min, hcd_total_time_min = create_dims_targets(self.d_table, max_time=max_time, min_time=min_time,
                                                                        max_cid_time=max_cid_time, peak_time_hcd=peak_time_hcd,
                                                                        peak_time_cid=peak_time_cid, delay_time=delay_time,
                                                                        cid_perc=cid_perc)
 
-        write_out_dims_targets(suffix=self.suffix, out_dir=self.out_dir,
+        write_out_dims_targets(out_dir=self.out_dir,
                                end_time_min=end_time_min, hcd_total_time_min=hcd_total_time_min,
-                               targets=targets, pol=self.polarity, modify_original=galaxy_name,
+                               targets=targets, pol=self.polarity, target_name=target_name,
                                method_template_name=method_template_name)
 
         self.targets = targets
@@ -234,7 +234,15 @@ def main():
     dr.filter(irm=irm, stp=stp, pthr=pthr)
     dr.write_out_scores(args.modify_name, full=args.full_output)
     dr.write_out_traceback(args.modify_name)
+
+
     if args.tech=='dims':
+
+        if args.target_name:
+            target_name = args.target_name
+        else:
+            target_name = ''
+
         dr.dims_targets(max_time=float(args.max_time),
                         min_time=float(args.min_time),
                         max_cid_time=float(args.max_cid_time),
@@ -242,7 +250,7 @@ def main():
                         peak_time_cid=float(args.peak_time_cid),
                         delay_time=float(args.delay_time),
                         cid_perc=float(args.percentage_cid),
-                        target_name=args.target_name,
+                        target_name= target_name,
                         method_template_name=args.method_template_name)
 
     ft = datetime.datetime.now()
