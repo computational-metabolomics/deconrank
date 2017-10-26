@@ -114,9 +114,9 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
     # Get file pats and methods for XcaliburAutoInput file
     if not method_template_name:
         if pol == "POS":
-            meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\Pos_MSMS_MSn.meth"
+            meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\\Pos_MSMS_MSn.meth"
         else:
-            meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\Neg_MSMS_MSn.meth"
+            meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\\Neg_MSMS_MSn.meth"
     else:
         meth_template = "C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\templates\\"+method_template_name
 
