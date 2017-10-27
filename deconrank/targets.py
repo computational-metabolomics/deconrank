@@ -95,7 +95,10 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
     #==============================================
     # Write out
     #==============================================
+
+
     if target_name:
+        target_name = os.path.splitext(target_name)[0]
         nm_target = target_name + "_target.tsv"
     else:
         nm_target = 'target.tsv'
