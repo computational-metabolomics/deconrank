@@ -107,7 +107,7 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
             os.makedirs(tdir)
         nt_target = os.path.join(tdir, nm_target)
     else:
-        nt_target = nm_target
+        nt_target = os.path.join(out_dir, nm_target)
 
     xcalibur_auto_pth = os.path.join(out_dir, "XcaliburAutoInput.tsv")
 
