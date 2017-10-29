@@ -91,17 +91,17 @@ def create_dims_targets(d_table, max_time=1800, min_time=120, max_cid_time=300, 
 
 
 def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, pol,
-                           target_name=None, dir=None, method_template_name=None):
+                           target_name=None, dir=None, method_template_name=None, ft=True):
     #==============================================
     # Write out
     #==============================================
 
 
-    if target_name:
+    if not target_name and ft:
+        nm_target = 'target.tsv'
+    else:
         target_name = os.path.splitext(target_name)[0]
         nm_target = target_name + "_target.tsv"
-    else:
-        nm_target = 'target.tsv'
 
     # saveand target list
     if dir:
