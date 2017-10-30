@@ -112,7 +112,7 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
     else:
         nt_target = os.path.join(out_dir, nm_target)
 
-    xcalibur_auto_pth = os.path.join(out_dir, "XcaliburAutoInput.tsv")
+    xcalibur_auto_pth = os.path.join(out_dir, "xcalibur_auto_input.tsv")
 
     # Get file pats and methods for XcaliburAutoInput file
     if not method_template_name:
@@ -132,12 +132,13 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
 
 
     # xcalibur auto input string
-    xcalibur_auto_txt = [meth_template, target_ex, end_time_min, hcd_total_time_min, method_ex]
+    xcalibur_auto_txt = np.array([meth_template, target_ex, end_time_min, hcd_total_time_min, method_ex])
+    np.savetxt(xcalibur_auto_pth, xcalibur_auto_txt, fmt="%s", delimiter="\t")
 
-    with open(xcalibur_auto_pth, 'wb') as csvfile:
-        w = csv.writer(csvfile, delimiter='\t')
-        w.writerow(['meth_template', 'target_ex', 'end_time_min', 'hcd_total_time_min', 'method_ex'])
-        # w.writerow(xcalibur_auto_pth)
+    # with open(xcalibur_auto_pth, 'wb') as csvfile:
+    #     w = csv.writer(csvfile, delimiter='\t')
+    #     w.writerow(['meth_template', 'target_ex', 'end_time_min', 'hcd_total_time_min', 'method_ex'])
+    #     # w.writerow(xcalibur_auto_pth)
 
     # Write out target
     np.savetxt(nt_target, targets, fmt="%s", delimiter="\t")
