@@ -137,7 +137,7 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
     with open(xcalibur_auto_pth, 'wb') as csvfile:
         w = csv.writer(csvfile, delimiter='\t')
         w.writerow(['meth_template', 'target_ex', 'end_time_min', 'hcd_total_time_min', 'method_ex'])
-        w.writerow(xcalibur_auto_pth)
+        # w.writerow(xcalibur_auto_pth)
 
     # Write out target
     np.savetxt(nt_target, targets, fmt="%s", delimiter="\t")
