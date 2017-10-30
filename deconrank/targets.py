@@ -144,4 +144,4 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
     #     # w.writerow(xcalibur_auto_pth)
 
     # Write out target
-    np.savetxt(nt_target, targets, fmt="%s", delimiter="\t")
+    np.savetxt(nt_target, targets, fmt="%s", delimiter="\t", header='mz\tstart\tend\tcomment')
