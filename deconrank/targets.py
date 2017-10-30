@@ -133,8 +133,10 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
 
     # xcalibur auto input string
     xcalibur_auto_txt = np.array([meth_template, target_ex, end_time_min, hcd_total_time_min, method_ex])
+    xcalibur_auto_cn = np.array(['meth_template', 'target_ex', 'end_time_min', 'hcd_total_time_min', 'method_ex'])
+    xcalibur_auto_txt = np.array(['meth_template', 'target_ex', 'end_time_min', 'hcd_total_time_min', 'method_ex'])
     # Single array so will write column wise, can change to to newline
-    np.savetxt(xcalibur_auto_pth, xcalibur_auto_txt, fmt="%s", newline="\t")
+    np.savetxt(xcalibur_auto_pth, (xcalibur_auto_cn, xcalibur_auto_txt), fmt="%s")
 
     # with open(xcalibur_auto_pth, 'wb') as csvfile:
     #     w = csv.writer(csvfile, delimiter='\t')
@@ -143,5 +145,3 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
 
     # Write out target
     np.savetxt(nt_target, targets, fmt="%s", delimiter="\t")
-
-    return xcalibur_auto_txt
