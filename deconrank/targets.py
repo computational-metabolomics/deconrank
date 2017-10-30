@@ -134,13 +134,9 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
     # xcalibur auto input string
     xcalibur_auto_txt = [meth_template, target_ex, end_time_min, hcd_total_time_min, method_ex]
 
-    # add to string to bottom of file (if file exists, if nt the create file and add to first line)
-    try:
-        with open(xcalibur_auto_pth, "a") as file:
-            file.write(' '.join(xcalibur_auto_txt))
-    except IOError:
-        with open(xcalibur_auto_pth, "a") as file:
-            file.write(' '.join(xcalibur_auto_txt))
+    with open(xcalibur_auto_pth, "w") as file:
+        file.write(' '.join(xcalibur_auto_txt)+'\n')
+
 
     # Write out target
     np.savetxt(nt_target, targets, fmt="%s", delimiter="\t")
