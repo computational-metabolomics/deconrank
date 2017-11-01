@@ -128,7 +128,7 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
     else:
         method_ex = "'C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\methods\\MSn.meth'"
 
-    target_ex = "'C:\\Documents and Settings\\XPMUser\Desktop\\XcaliburAuto\\targets\\"+nm_target+"'"
+    target_ex = "'C:\\Documents and Settings\\XPMUser\Desktop\\XcaliburAuto\\targets\\" + target_name + "\\" + nm_target+"'"
 
 
     # xcalibur auto input string
