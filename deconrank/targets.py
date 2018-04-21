@@ -101,6 +101,7 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
         target_name = os.path.splitext(target_name)[0]
         nm_target = target_name + ".tsv"
     else:
+        target_name = 'target'
         nm_target = 'target.tsv'
 
     # saveand target list
@@ -127,6 +128,9 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
         method_ex = "'C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\methods\\" + target_name + "_MSn.meth'"
     else:
         method_ex = "'C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\methods\\MSn.meth'"
+
+
+
 
     target_ex = "'C:\\Documents and Settings\\XPMUser\Desktop\\XcaliburAuto\\targets\\" + target_name + "\\" + nm_target+"'"
 

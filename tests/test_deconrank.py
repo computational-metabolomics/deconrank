@@ -16,6 +16,7 @@ class TestDeconrank(unittest.TestCase):
         '''Test the the grouping stage of the deconrank workflow'''
         dr = Deconrank(to_test_data('peaklist_positive.csv'))
         dr.group()
+
         self.assertEqual(dr.adduct_groups, example_data_s.adduct_groups)
 
         self.assertEqual(dr.isotope_groups, example_data_s.isotope_groups)
@@ -91,9 +92,11 @@ class TestDeconrank(unittest.TestCase):
 
         spth = os.path.join(os.path.dirname((os.path.dirname(os.path.realpath(__file__)))), 'deconrank', 'deconrank.py')
 
-        cmd = 'python {spth} -i {in_pth} -o {out_pth} '.format(in_pth=in_pth, out_pth=out_dir, spth=spth)
+        #cmd = 'python {spth} -i {in_pth} -o {out_pth} '.format(in_pth=in_pth, out_pth=out_dir, spth=spth)
+        cmd = ['python', spth, '-i',  in_pth,  '-o', out_dir]
+        print(cmd)
 
-        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        popen = subprocess.Popen(cmd,  stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, err = popen.communicate()
         print(output)
         print(err)
