@@ -92,9 +92,19 @@ class TestDeconrank(unittest.TestCase):
         dr.filter()
         dr.dims_targets()
 
-        print(dr.d_table)
-
         self.assertEqual(list(dr.d_table['excludedFinal']), example_data_s.excluded_final_dims_purity_na )
+
+    def test_camera_dims_galaxy_out(self):
+        '''Test the the filter stage of the deconrank workflow'''
+        dr = Deconrank(to_test_data('Galaxy13-[CAMERA_DIMS_on_data_4__peaklist].tsv'),
+                       out_dir=to_test_data('camera_dims_galaxy_test'),  delim='\t', polarity='pos')
+        dr.group()
+        dr.score()
+        dr.filter()
+        dr.dims_targets()
+
+
+        self.assertEqual(list(dr.d_table['excludedFinal']), example_data_s.excluded_final_dims_galaxy_camera)
 
     def test_cli_dims(self):
         '''Test command line for DIMS'''
@@ -123,6 +133,46 @@ class TestDeconrank(unittest.TestCase):
         d_table = load_score_table(l)
 
         self.assertEqual(list(d_table['excludedFinal']), example_data_s.excluded_final_dims)
+
+#     def test_cli_dims_galaxy(self):
+#         '''Test command line for DIMS'''
+#         import subprocess
+#         import csv
+#
+#         in_pth = os.path.abspath(to_test_data('A01_Polar_Daph_WAX1_Phenyl_LCMS_Neg_DIMS_annotated.csv'))
+#         out_dir = os.path.abspath(to_test_data('results_cli_dims'))
+#
+#         spth = os.path.join(os.path.dirname((os.path.dirname(os.path.realpath(__file__)))), 'deconrank', 'deconrank.py')
+#
+#         #cmd = 'python {spth} -i {in_pth} -o {out_pth} '.format(in_pth=in_pth, out_pth=out_dir, spth=spth)
+#         cmd = ['python', spth,
+#                '-i',  in_pth,
+#                '-o', out_dir,
+#                '--delim', 'tab',
+#                '--pol',
+#                ]
+#         ' python -m deconrank -i tests/data/Galaxy13-[CAMERA_DIMS_on_data_4__peaklist].tsv -o' \
+#         ' . --delim tab --pol pos --tech dims --pol pos --pthr 0.0 --stp 0.0' \
+#         ' --irm ""__ob__M+1__cb__+,__ob__M+2__cb__+"" --max_time 1800.0 --min_time 120.0 ' \
+#         '--max_cid_time 300.0 --peak_time_cid 12.0 --peak_time_hcd 10.0 --percentage_cid 0.333 --delay_time 24.0 --full_output --target_name 'CAMERA_DIMS on data 4: peaklist'
+# '
+#
+#         print(cmd)
+#
+#         popen = subprocess.Popen(cmd,  stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+#         output, err = popen.communicate()
+#         print(output)
+#         print(err)
+#
+#         with open(os.path.join(out_dir, 'A01_Polar_Daph_WAX1_Phenyl_LCMS_Neg_DIMS_annotated_scores.csv'), 'rb') as csvfile:
+#             r = csv.reader(csvfile, delimiter=',')
+#             next(r, None)
+#             l = [tuple(i) for i in r]
+#
+#         d_table = load_score_table(l)
+#
+#         self.assertEqual(list(d_table['excludedFinal']), example_data_s.excluded_final_dims)
+
 
 
 

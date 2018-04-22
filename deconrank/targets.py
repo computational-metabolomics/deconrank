@@ -53,10 +53,10 @@ def create_dims_targets(d_table, max_time=1800, min_time=120, max_cid_time=300, 
         hcd_total_time = max_time_hcd+delay_time
 
         # only get the top peaks
-        npa_small = d_table_small[:peak_max_limit, ]
+        npa_small = d_table_small[:int(peak_max_limit), ]
 
         # Final flag for the full peak list
-        mask = np.in1d(pids, d_table_small['peakID'])
+        mask = np.in1d(pids, npa_small['peakID'])
         d_table['excludedFinal'][mask==False] = 1
 
     else:
