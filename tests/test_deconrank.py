@@ -82,6 +82,20 @@ class TestDeconrank(unittest.TestCase):
 
         self.assertEqual(list(dr.d_table['excludedFinal']), example_data_s.excluded_final_dims)
 
+
+    def test_dims_targets_purity_na(self):
+        '''Test the the filter stage of the deconrank workflow'''
+        dr = Deconrank(to_test_data('A01_Polar_Daph_WAX1_Phenyl_LCMS_Neg_DIMS_annotated_purityNA.csv'),
+                       out_dir=to_test_data('results_purity_na'))
+        dr.group()
+        dr.score()
+        dr.filter()
+        dr.dims_targets()
+
+        print(dr.d_table)
+
+        self.assertEqual(list(dr.d_table['excludedFinal']), example_data_s.excluded_final_dims_purity_na )
+
     def test_cli_dims(self):
         '''Test command line for DIMS'''
         import subprocess

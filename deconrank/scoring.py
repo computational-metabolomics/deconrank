@@ -204,8 +204,11 @@ def create_score_table(scored_adduct_list, features, header):
     for s in scored_adduct_list:
         if 'medianPurity' in header:
             medianPurity = features[s[0]][header.index('medianPurity') - 1]
+            if medianPurity == 'NA':
+                medianPurity = 0
         else:
             medianPurity = 0
+
 
         mz = features[s[0]][mz_idx]
 

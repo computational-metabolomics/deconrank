@@ -1,6 +1,6 @@
 deconrank
 ======
-Package to deconvolute, rank &amp; score precursors prior to fragmentation
+Package to deconvolute, rank & score precursors prior to fragmentation
 
 
 Installation

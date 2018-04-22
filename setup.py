@@ -26,7 +26,7 @@ def main():
           platforms=['Windows'],
           keywords=['Metabolomics', 'Mass spectrometry', 'Fragmentation'],
           packages=['deconrank'],
-          test_suite='tests.suite',
+          test_suite='tests',
           include_package_data=True
           )
 
