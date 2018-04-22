@@ -11,7 +11,14 @@ Command line
 ------------
 ::
 
-    $ python deconrank.py --help
+    # python -m deconrank -i [in dir] -o [out dir] -p [polarity OPTIONAL] -w [list of weights: adduct,intensity,purity,clustn ]
+
+    $ python -m deconrank -i /path/2/camera_out.csv -o /path/2/out_dir/ -w 0.3,0.3,0.2,0.2
+
+    $ python -m deconrank --help
+
+
+
 
 
 
@@ -27,4 +34,4 @@ Developers & Contributors
 
 License
 -------
-Released under the GNU General Public License v3.0 (see `LICENSE file <https://github.com/computational-metabolomics/dimspy/blob/master/LICENSE>`_)
+Released under the GNU General Public License v3.0 (see `LICENSE file <https://github.com/computational-metabolomics/deconrank/blob/master/LICENSE>`_)
