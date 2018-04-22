@@ -203,8 +203,13 @@ def main():
     else:
         polarity = ""
 
-    irm = args.irm.split(',')
+    if args.irm:
+        args.irm.replace('__ob__', '[')
+        args.irm.replace('__cb__', '[')
 
+    irm = args.irm.split(',')
+    print(irm)
+    
     if args.w:
         weights = args.w.split(',')
         weights = [float(i) for i in weights]
@@ -225,6 +230,9 @@ def main():
         delim = '\t'
     else:
         print("delim needs to be either 'comma' or 'tab'")
+
+
+
 
     stp = np.float(args.stp)
     dr = Deconrank(in_file=args.camera_peaklist_pth, out_dir =args.out_dir, polarity=polarity, rule_pth=args.rp,
