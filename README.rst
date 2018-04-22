@@ -19,10 +19,6 @@ Command line
 
 
 
-
-
-
-
 Developers & Contributors
 -------------------------
  - Thomas N. Lawson (tnl495@bham.ac.uk) - `University of Birmingham (UK) <http://www.birmingham.ac.uk/index.aspx>`_
