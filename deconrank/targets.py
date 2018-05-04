@@ -156,5 +156,6 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
 
     # Write out target
     print('save text targets')
-    np.savetxt(nt_target, targets, fmt="%s", delimiter="\t", header='mz\tstart\tend\t\t\t\t\tcomment', comments='')
+    #np.savetxt(nt_target, targets, fmt="%s", delimiter="\t", header='mz\tstart\tend\t\t\t\t\tcomment', comments='')
+    np.savetxt(nt_target, targets, fmt="%s", delimiter="\t", comments='')
     print('saved text')
