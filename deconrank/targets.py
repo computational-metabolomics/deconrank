@@ -95,7 +95,7 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
     #==============================================
     # Write out
     #==============================================
-
+    print('out_dir', out_dir)
 
     if target_name:
         target_name = os.path.splitext(target_name)[0]
@@ -130,7 +130,7 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
         method_ex = "'C:\\Documents and Settings\\XPMUser\\Desktop\\XcaliburAuto\\methods\\MSn.meth'"
 
 
-
+    print('save text')
 
     target_ex = "'C:\\Documents and Settings\\XPMUser\Desktop\\XcaliburAuto\\targets\\" + target_name + "\\" + nm_target+"'"
 
@@ -138,6 +138,7 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
     # xcalibur auto input string
     xcalibur_auto_txt = np.array([meth_template, target_ex, end_time_min, hcd_total_time_min, method_ex])
     xcalibur_auto_cn = np.array(['meth_template', 'target_ex', 'end_time_min', 'hcd_total_time_min', 'method_ex'])
+    print('save text xcalibur auto')
     # xcalibur_auto_txt = np.array(['meth_template', 'target_ex', 'end_time_min', 'hcd_total_time_min', 'method_ex'])
     # Single array so will write column wise, can change to to newline
     np.savetxt(xcalibur_auto_pth, (xcalibur_auto_cn, xcalibur_auto_txt), fmt="%s", delimiter="\t")
@@ -148,4 +149,6 @@ def write_out_dims_targets(out_dir, end_time_min, hcd_total_time_min, targets, p
     #     # w.writerow(xcalibur_auto_pth)
 
     # Write out target
+    print('save text targets')
     np.savetxt(nt_target, targets, fmt="%s", delimiter="\t", header='mz\tstart\tend\t\t\t\t\tcomment', comments='')
+    print('saved text')
