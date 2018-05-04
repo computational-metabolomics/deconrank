@@ -205,7 +205,7 @@ def main():
 
     if args.irm:
         args.irm.replace('__ob__', '[')
-        args.irm.replace('__cb__', '[')
+        args.irm.replace('__cb__', ']')
 
     irm = args.irm.split(',')
     print(irm)
