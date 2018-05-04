@@ -10,7 +10,7 @@ except ImportError:
 def main():
 
     setup(name="deconrank",
-          version="0.1.0",
+          version="0.1.1",
           install_requires=[
               'numpy',
               'argparse'

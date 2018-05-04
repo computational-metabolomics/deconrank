@@ -204,10 +204,11 @@ def main():
         polarity = ""
 
     if args.irm:
-        args.irm.replace('__ob__', '[')
-        args.irm.replace('__cb__', ']')
-
-    irm = args.irm.split(',')
+        irm_s = args.irm.replace('__ob__', '[')
+        irm_s = irm_s.replace('__cb__', ']')
+	irm = irm_s.split(',')
+    else:
+        irm= None
     print(irm)
     
     if args.w:
