@@ -7,6 +7,7 @@ import numpy as np
 
 def create_dims_targets(d_table, max_time=1800, min_time=120, max_cid_time=300, peak_time_hcd=10,
                         peak_time_cid=12, delay_time=0.24, cid_perc=10):
+
     #==============================================
     # Create the dynamic peak lists for msn and ms
     #==============================================
@@ -24,6 +25,11 @@ def create_dims_targets(d_table, max_time=1800, min_time=120, max_cid_time=300, 
     d_table_small = d_table[maskE]
 
     total_peak_nm = d_table_small.shape[0]
+
+    if total_peak_nm==0:
+        print('no rows')
+        return 0
+
 
     # Get the length of time for the cid section
     delay_time = delay_time

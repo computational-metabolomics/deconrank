@@ -83,6 +83,11 @@ class Deconrank(object):
     def dims_targets(self, max_time=1800, min_time=120, max_cid_time=300, peak_time_hcd=10, peak_time_cid=12,
                      delay_time=0.24, cid_perc=10, target_name=None, method_template_name=None):
         print('create dims targets')
+        print(self.d_table.shape[0])
+        if self.d_table.shape[0]==0:
+            return 0
+        
+
         targets, end_time_min, hcd_total_time_min = create_dims_targets(self.d_table, max_time=max_time, min_time=min_time,
                                                                        max_cid_time=max_cid_time, peak_time_hcd=peak_time_hcd,
                                                                        peak_time_cid=peak_time_cid, delay_time=delay_time,

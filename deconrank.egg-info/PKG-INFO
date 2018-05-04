@@ -1,6 +1,6 @@
 Metadata-Version: 1.0
 Name: deconrank
-Version: 0.0.30
+Version: 0.1.1
 Summary: Package to deconvolute and rank precursors. Requires the adducts and isotopes to have beenannotated prior (e.g. using CAMERA). Precursors are ranked by multiple criteria based on priority to fragment. The total weighted score contains the following criteria:adduct type, cluster size, precursor ion purity and intensity
 Home-page: https://github.com/computational-metabolomics
 Author: Ralf Weber, Martin Jones, Thomas N. Lawson
