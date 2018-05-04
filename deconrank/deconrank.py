@@ -203,7 +203,7 @@ def main():
     print("###start time:", st.strftime("%A%d%B%Y_%I%M"), "###")
     args = p.parse_args()
 
-    if not os.path.exists(args.camera_peaklist_pth):
+    if not os.path.exists(args.camera_peaklist_pth) or os.path.getsize(args.camera_peaklist_pth)==0:
         print('NO INPUT FILE EXISTS!', args.camera_peaklist_pth)
         return 0
 
