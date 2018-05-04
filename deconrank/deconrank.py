@@ -203,6 +203,10 @@ def main():
     print("###start time:", st.strftime("%A%d%B%Y_%I%M"), "###")
     args = p.parse_args()
 
+    if not os.path.exists(args.i):
+        print('NO INPUT FILE EXISTS!', args.i)
+        return 0
+
     if args.pol:
         polarity = args.pol
     else:
