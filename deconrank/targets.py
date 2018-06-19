@@ -51,22 +51,23 @@ def create_dims_targets(d_table, max_time=1800, min_time=120, max_cid_time=300, 
     # else get a peaklist size based on the number of peaks available.
 
     # Final inclusion/exclusion column based on time constraints
-    # NOTE: now already done at the d_table creation stage
-
-    pids = d_table['peakID']
 
     if total_peak_nm > peak_max_limit:
         hcd_total_time = max_time_hcd+delay_time
-
+        print('CHECKING', hcd_total_time, peak_max_limit)
+        print(d_table['excludedFinal'])
         # only get the top peaks
-        npa_small = d_table_small[:int(peak_max_limit), ]
+        d_table_time_filtered = d_table_small[:int(peak_max_limit), ]
 
         # Final flag for the full peak list
-        mask = np.in1d(pids, npa_small['peakID'])
+        mask = np.in1d(d_table['peakID'], d_table_time_filtered['peakID'])
+
         d_table['excludedFinal'][mask==False] = 1
+        print(d_table['excludedFinal'])
 
     else:
         hcd_total_time = (total_peak_nm * peak_time_hcd)+delay_time
+        d_table_time_filtered = d_table_small
 
     end_time = hcd_total_time+cid_total_time
 
@@ -78,21 +79,21 @@ def create_dims_targets(d_table, max_time=1800, min_time=120, max_cid_time=300, 
     end_time_min = str(round(end_time/60.0, 2))
 
     # Create the required columns in suitable format for the target list file
-    mz = d_table_small['mz']
+    mz = d_table_time_filtered['mz']
     mz = mz.astype(float)
     mz = np.round(mz, 5)
     space = np.repeat("\t", len(mz))
     s = np.repeat(0, len(mz))
     f = np.repeat(end_time_min, len(mz))
-    c = np.core.defchararray.add('peak_', d_table_small['peakID'])
+    c = np.core.defchararray.add('peak_', d_table_time_filtered['peakID'])
 
     # if no peaks then return
-    if d_table_small.shape[0]==0:
+    if d_table_time_filtered.shape[0]==0:
         return 'NO_PEAKS'
 
     targets = np.column_stack((mz, s, f, space, space, c))
 
-    return targets, end_time_min, hcd_total_time_min
+    return targets, end_time_min, hcd_total_time_min, d_table
 
 
 

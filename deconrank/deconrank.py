@@ -88,10 +88,11 @@ class Deconrank(object):
             return 0
         
 
-        targets, end_time_min, hcd_total_time_min = create_dims_targets(self.d_table, max_time=max_time, min_time=min_time,
+        targets, end_time_min, hcd_total_time_min, d_table = create_dims_targets(self.d_table, max_time=max_time, min_time=min_time,
                                                                        max_cid_time=max_cid_time, peak_time_hcd=peak_time_hcd,
                                                                        peak_time_cid=peak_time_cid, delay_time=delay_time,
                                                                        cid_perc=cid_perc)
+        self.d_table = d_table
         print('write out targets')
         write_out_dims_targets(out_dir=self.out_dir,
                                end_time_min=end_time_min, hcd_total_time_min=hcd_total_time_min,
@@ -215,9 +216,9 @@ def main():
     if args.irm:
         irm_s = args.irm.replace('__ob__', '[')
         irm_s = irm_s.replace('__cb__', ']')
-	irm = irm_s.split(',')
+        irm = irm_s.split(',')
     else:
-        irm= None
+        irm = None
     print(irm)
     
     if args.w:
@@ -250,7 +251,10 @@ def main():
     dr.group()
     dr.score(weights=weights)
     dr.filter(irm=irm, stp=stp, pthr=pthr)
-    dr.write_out_scores(args.modify_name, full=args.full_output)
+
+    if not args.tech == 'dims':
+        dr.write_out_scores(args.modify_name, full=args.full_output)
+
     dr.write_out_traceback(args.modify_name)
 
 
@@ -270,6 +274,8 @@ def main():
                         cid_perc=float(args.percentage_cid),
                         target_name= target_name,
                         method_template_name=args.method_template_name)
+
+        dr.write_out_scores(args.modify_name, full=args.full_output)
 
     ft = datetime.datetime.now()
     d = ft - st
